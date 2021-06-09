@@ -1,10 +1,10 @@
 const db = require('../../data/db-config');
 
 async function find() {
-	return await db('schemes as sc')
-		.leftJoin('steps as st', 'sc.scheme_id', 'st.scheme_id')
+	return db('schemes as sc')
 		.select('sc.*')
 		.count('st.step_id', { as: 'number_of_steps' })
+		.leftJoin('steps as st', 'sc.scheme_id', 'st.scheme_id')
 		.groupBy('sc.scheme_id')
 		.orderBy('sc.scheme_id', 'asc');
 
@@ -28,13 +28,35 @@ async function find() {
 }
 
 async function findById(scheme_id) {
+	// EXERCISE B
 	const scheme = await db('schemes as sc')
 		.leftJoin('steps as st', 'sc.scheme_id', 'st.scheme_id')
 		.select('sc.scheme_name', 'st.*')
 		.where('sc.scheme_id', scheme_id)
 		.orderBy('st.step_number', 'asc');
 
-	return scheme;
+	if (!scheme) {
+		return [];
+	} else {
+		return {
+			scheme_id: Number(scheme_id),
+			scheme_name: scheme[0]['scheme_name'],
+			steps: scheme
+				.map(item => {
+					if (!item['step_id']) {
+						return [];
+					} else {
+						return {
+							step_id: item['step_id'],
+							step_number: item['step_number'],
+							instructions: item['instructions']
+						};
+					}
+				})
+				.flat()
+		};
+	}
+
 	// EXERCISE B
 	/*
     1B- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`:
@@ -103,7 +125,33 @@ async function findById(scheme_id) {
   */
 }
 
-function findSteps(scheme_id) {
+async function findSteps(scheme_id) {
+	const scheme = await db('schemes as sc')
+		.leftJoin('steps as st', 'sc.scheme_id', 'st.scheme_id')
+		.select('sc.scheme_name', 'st.*')
+		.where('sc.scheme_id', scheme_id)
+		.orderBy('st.step_number', 'asc');
+
+	const schemeName = scheme[0]['scheme_name'];
+
+	if (!scheme) {
+		return [];
+	} else {
+		return [
+			...scheme.map(item => {
+				if (!item['step_id']) {
+					return [];
+				} else {
+					return {
+						step_id: item['step_id'],
+						step_number: item['step_number'],
+						instructions: item['instructions'],
+						scheme_name: schemeName
+					};
+				}
+			})
+		].flat();
+	}
 	// EXERCISE C
 	/*
     1C- Build a query in Knex that returns the following data.
@@ -127,14 +175,18 @@ function findSteps(scheme_id) {
   */
 }
 
-function add(scheme) {
+async function add(scheme) {
+	const [id] = await db('schemes').insert(scheme);
+	return findById(id);
 	// EXERCISE D
 	/*
     1D- This function creates a new scheme and resolves to _the newly created scheme_.
   */
 }
 
-function addStep(scheme_id, step) {
+async function addStep(scheme_id, step) {
+	await db('schemes as sc').insert(step).where('id', scheme_id);
+	return findById(scheme_id);
 	// EXERCISE E
 	/*
     1E- This function adds a step to the scheme with the given `scheme_id`

@@ -1,22 +1,25 @@
 const Schemes = require('./scheme-model.js');
+const db = require('../../data/db-config');
 
-const checkSchemeId = (req, res, next) => {
+const checkSchemeId = async (req, res, next) => {
 	const { scheme_id } = req.params;
-	Schemes.findById(scheme_id)
-		.then(scheme => {
-			if (!scheme) {
-				next({ status: 404, message: `scheme with scheme_id ${scheme_id} not found` });
-			} else {
-				next();
-			}
-		})
-		.catch(next);
+
+	try {
+		const scheme = await db('schemes').where('scheme_id', scheme_id).first();
+		if (!scheme) {
+			next({ status: 404, message: `scheme with scheme_id ${scheme_id} not found` });
+		} else {
+			next();
+		}
+	} catch (err) {
+		next(err);
+	}
 };
 
 const validateScheme = (req, res, next) => {
 	const { scheme_name } = req.body;
 	/* If `scheme_name` is missing, empty string or not a string:*/
-	if (!scheme_name || scheme_name === undefined || typeof scheme_name !== 'string') {
+	if (!scheme_name || typeof scheme_name !== 'string') {
 		next({ status: 400, message: 'invalid scheme_name' });
 	} else {
 		next();

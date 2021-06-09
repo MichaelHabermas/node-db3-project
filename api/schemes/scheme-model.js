@@ -1,5 +1,6 @@
-function find() { // EXERCISE A
-  /*
+function find() {
+	// EXERCISE A
+	/* g
     1A- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`.
     What happens if we change from a LEFT join to an INNER join?
 
@@ -17,8 +18,9 @@ function find() { // EXERCISE A
   */
 }
 
-function findById(scheme_id) { // EXERCISE B
-  /*
+function findById(scheme_id) {
+	// EXERCISE B
+	/*
     1B- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`:
 
       SELECT
@@ -85,8 +87,9 @@ function findById(scheme_id) { // EXERCISE B
   */
 }
 
-function findSteps(scheme_id) { // EXERCISE C
-  /*
+function findSteps(scheme_id) {
+	// EXERCISE C
+	/*
     1C- Build a query in Knex that returns the following data.
     The steps should be sorted by step_number, and the array
     should be empty if there are no steps for the scheme:
@@ -108,14 +111,16 @@ function findSteps(scheme_id) { // EXERCISE C
   */
 }
 
-function add(scheme) { // EXERCISE D
-  /*
+function add(scheme) {
+	// EXERCISE D
+	/*
     1D- This function creates a new scheme and resolves to _the newly created scheme_.
   */
 }
 
-function addStep(scheme_id, step) { // EXERCISE E
-  /*
+function addStep(scheme_id, step) {
+	// EXERCISE E
+	/*
     1E- This function adds a step to the scheme with the given `scheme_id`
     and resolves to _all the steps_ belonging to the given `scheme_id`,
     including the newly created one.
@@ -123,9 +128,9 @@ function addStep(scheme_id, step) { // EXERCISE E
 }
 
 module.exports = {
-  find,
-  findById,
-  findSteps,
-  add,
-  addStep,
-}
+	find,
+	findById,
+	findSteps,
+	add,
+	addStep
+};

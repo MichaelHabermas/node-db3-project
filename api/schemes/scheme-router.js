@@ -1,6 +1,10 @@
 // DO NOT CHANGE THIS FILE
 const express = require('express');
-const { checkSchemeId, validateScheme, validateStep } = require('./scheme-middleware');
+const {
+	checkSchemeId,
+	validateScheme,
+	validateStep
+} = require('./scheme-middleware');
 const Schemes = require('./scheme-model.js');
 
 const router = express.Router();
@@ -129,16 +133,21 @@ router.post('/', validateScheme, (req, res, next) => {
     }
   ]
 */
-router.post('/:scheme_id/steps', checkSchemeId, validateStep, (req, res, next) => {
-	const step = req.body;
-	const { scheme_id } = req.params;
+router.post(
+	'/:scheme_id/steps',
+	checkSchemeId,
+	validateStep,
+	(req, res, next) => {
+		const step = req.body;
+		const { scheme_id } = req.params;
 
-	Schemes.addStep(scheme_id, step)
-		.then(allSteps => {
-			res.status(201).json(allSteps);
-		})
-		.catch(next);
-});
+		Schemes.addStep(scheme_id, step)
+			.then(allSteps => {
+				res.status(201).json(allSteps);
+			})
+			.catch(next);
+	}
+);
 
 router.use((err, req, res, next) => {
 	// eslint-disable-line

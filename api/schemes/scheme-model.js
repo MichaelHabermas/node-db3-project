@@ -127,6 +127,8 @@ async function findById(scheme_id) {
 
 async function findSteps(scheme_id) {
 	// const scheme = await findById(scheme_id);
+	// console.log(scheme[0]['scheme_name']);
+	// scheme.steps.scheme_name = scheme[0]['scheme_name'];
 	// return scheme.steps;
 
 	const scheme = await db('schemes as sc')
@@ -188,8 +190,7 @@ async function add(scheme) {
 }
 
 async function addStep(scheme_id, step) {
-	const { instructions, step_number } = step;
-	await db('steps').insert({ instructions, step_number, scheme_id });
+	await db('steps').insert({ ...step, scheme_id });
 	return findSteps(scheme_id);
 	// EXERCISE E
 	/*
